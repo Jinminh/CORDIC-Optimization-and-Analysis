@@ -1,0 +1,139 @@
+	# assembly compiled by O3
+
+	# two slots machine
+
+	# cordic_rotation
+
+	# first time
+	mov	r5, r0					cmp	r7, #0					#load first element in the elementary rotation array where it stores two values and do the first comparison (if z < 0).
+	mov	r3, r5, lsr #16				mov	r4, r5, asl #16			#since every element has two values, make the first elementary rotation value available, and prepare for the second elementary angle value.
+	rsbge	r3, r3, r7				addlt	r3, r7, r3			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	rsbge	r1, r6, r8				addlt	r1, r6, r8
+	addge	r2, r6, r8				rsblt	r2, r8, r6
+
+	# second time
+	mov	r4, r4, lsr #16				nop							#make second elementary rotation value available for second time.
+	ldr	ip, [sp, #4]				cmp	r3, #0					#load second element in the elementary rotation array and do the second comparison (if z < 0).
+	rsbge	r3, r4, r3				addlt	r3, r3, r4			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	addge	r0, r2, r1, asr #1 			sublt	r0, r2, r1, asr #1
+	subge	r1, r1, r2, asr #1 			addlt	r1, r1, r2, asr #1
+	mov	r5, ip, asl #16				mov	ip, ip, lsr #16			#make third elementary rotation value available, prepare for the fourth one.
+
+	# third time
+	cmp	r3, #0					nop							#do the third comparison (if z < 0).
+	rsbge	r3, ip, r3				addlt	r3, r3, ip			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	addge	r2, r0, r1, asr #2			sublt	r2, r0, r1, asr #2
+	subge	r1, r1, r0, asr #2			addlt	r1, r1, r0, asr #2
+	
+	# fourth time
+	mov	r5, r5, lsr #16				nop							#make fourth elementary rotation value available for fourth time.
+	ldr	r4, [sp, #8]				cmp	r3, #0					#load third element in the elementary rotation array and do the fourth comparison (if z < 0).
+	rsbge	r3, r5, r3				addlt	r3, r3, r5			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	addge	r0, r2, r1, asr #3			sublt	r0, r2, r1, asr #3
+	subge	r1, r1, r2, asr #3			addlt	r1, r1, r2, asr #3
+	mov	ip, r4, lsr #16				mov	r5, r4, asl #16			#make fifth elementary rotation value available, prepare for the sixth one.
+
+	# fifth time
+
+	cmp	r3, #0					nop							#do the fifth comparison (if z < 0).
+	rsbge	r3, ip, r3				addlt	r3, r3, ip			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	addge	r2, r0, r1, asr #4			sublt	r2, r0, r1, asr #4
+	subge	r1, r1, r0, asr #4			addlt	r1, r1, r0, asr #4
+
+	# sixth time
+
+	mov	r5, r5, lsr #16				nop							#make sixth elementary rotation value available for sixth time.
+	ldr	r4, [sp, #12]				cmp	r3, #0					#load fourth element in the elementary rotation array and do the sixth comparison (if z < 0).
+	rsbge	r3, r5, r3				addlt	r3, r3, r5			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	addge	r0, r2, r1, asr #5			sublt	r0, r2, r1, asr #5
+	subge	r1, r1, r2, asr #5			addlt	r1, r1, r2, asr #5
+	mov	ip, r4, lsr #16				mov	r5, r4, asl #16			#make seventh elementary rotation value available, prepare for the eighth one.
+
+	# cordic_vector
+
+	# first time
+	mov	r5, r0					cmp	r6, #0					#load first element in the elementary rotation array where it stores two values and do the first comparison (if y >= 0).
+	addlt	r1, r6, r7				rsbge	r1, r7, r6			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	mov	r2, r5, lsr #16				mov	ip, r5, asl #16			#make first elementary rotation value available, prepare for the second one.
+	rsblt	r0, r6, r7				addge	r0, r7, r6
+	rsblt	r2, r2, r8				addge	r2, r8, r2
+
+	# second time
+
+	cmp	r1, #0					ldr	r4, [sp, #4]			#load second element in elementary rotation array and do the second comparison (if y >= 0).
+	addlt	r3, r1, r0, asr #1 			subge	r3, r1, r0, asr #1 	#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	mov	ip, ip, lsr #16				nop							#make second elementary rotation value available.
+	sublt	r0, r0, r1, asr #1 			addge	r0, r0, r1, asr #1
+	rsblt	ip, ip, r2				addge	ip, r2, ip
+	
+	# thrid time
+
+	cmp	r3, #0					nop							#do the third comparison (if y >= 0).
+	addlt	r1, r3, r0, asr #2			subge	r1, r3, r0, asr #2	#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	mov	r5, r4, lsr #16				mov	r2, r4, asl #16			#make second elementary rotation value available., prepare for the fourth one.
+	sublt	r0, r0, r3, asr #2			addge	r0, r0, r3, asr #2
+	rsblt	r5, r5, ip				addge	r5, ip, r5
+	
+	
+	# three slots machine
+
+	# cordic_rotation
+
+	# first time
+
+	mov	r5, r0					cmp	r7, #0					nop					#load first element in the elementary rotation array where it stores two values and do the first comparison (if z < 0).
+	mov	r3, r5, lsr #16				mov	r4, r5, asl #16			nop					#since every element has two values, make the first elementary rotation value available, and prepare for the second elementary angle value.
+	rsbge	r3, r3, r7				rsbge	r1, r6, r8			addge	r2, r6, r8	#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	addlt	r3, r7, r3				addlt	r1, r6, r8			rsblt	r2, r8, r6	
+	# because of dependency, it can not move any instructions in second line up to first line, and can not move any instructions in third or fourth line up to second line.
+
+	# second time
+
+	mov	r4, r4, lsr #16				ldr	ip, [sp, #4]			cmp	r3, #0					#make second elementary rotation value available for second time, load second element in the elementary rotation array and do the second comparison (if z < 0).
+	rsbge	r3, r4, r3				addge	r0, r2, r1, asr #1  subge	r1, r1, r2, asr #1
+	addlt	r3, r3, r4				sublt	r0, r2, r1, asr #1 	addlt	r1, r1, r2, asr #1	#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	mov	r5, ip, asl #16				mov	ip, ip, lsr #16			nop							#make third elementary rotation value available, prepare for the fourth one.
+
+	# third time
+
+	cmp	r3, #0					nop							nop							#do the third comparison (if z < 0).
+	rsbge	r3, ip, r3				addge	r2, r0, r1, asr #2	subge	r1, r1, r0, asr #2
+	addlt	r3, r3, ip				sublt	r2, r0, r1, asr #2	addlt	r1, r1, r0, asr #2	#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	
+	# cordic_vector
+
+	# first time
+
+	mov	r5, r0					cmp	r6, #0					nop							#load first element in the elementary rotation array where it stores two values and do the first comparison (if y >= 0).
+	mov	r2, r5, lsr #16				mov	ip, r5, asl #16			nop							#make first elementary rotation value available, prepare for the second one.
+	addlt	r1, r6, r7				rsblt	r0, r6, r7			rsblt	r2, r2, r8
+	rsbge	r1, r7, r6				addge	r0, r7, r6			addge	r2, r8, r2			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	# can not reduce the dependency of R2.
+
+	# second time
+
+	cmp	r1, #0					ldr	r4, [sp, #4]			mov	ip, ip, lsr #16			#load second element in elementary rotation array and do the second comparison (if y >= 0). make second value available.
+	addlt	r3, r1, r0, asr #1 			sublt	r0, r0, r1, asr #1 	rsblt	ip, ip, r2			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	subge	r3, r1, r0, asr #1 			addge	r0, r0, r1, asr #1 	addge	ip, r2, ip
+	# can not reduce the dependency of ip.
+	
+	# thrid time
+
+	cmp	r3, #0					mov	r5, r4, lsr #16			mov	r2, r4, asl #16			#do the third comparison (if y >= 0). make third elementary rotation value available., prepare for the fourth one.
+	addlt	r1, r3, r0, asr #2			sublt	r0, r0, r3, asr #2	rsblt	r5, r5, ip
+	subge	r1, r3, r0, asr #2			addge	r0, r0, r3, asr #2	addge	r5, ip, r5			#do under both situations at the same time, and because of predicates, only one would truly assign calculated value to register.
+	# can not reduce the dependency of R5.
+
+	# Conclusion: Using two slots machine would have a significant speed up than using one issue slot machine, although assembly code still has true dependency between the operation of extracting the elementary rotation value and the operation of incrementing/decrementing angle Z using the elementary angle, it's possible to reduce the overhead by simply moving operation of extraction above operation of comparison. Where in three slots machine, three arithmatic operations with same predicate could merge into one single long instruction which makes three slots machine have one less instruction than two slots machine, but the overhead caused by true dependency between the operation of extracting the elementary rotation value and the operation of incrementing/decrementing angle Z using the elementary angle cannot be removed without making a new instruction solely for the extraction operation. As a result, upgrading from two issue slots to three slots machine has a less significant effect than upgrading from one issue slot machine to two issue slots machine, meanwhile, the cost of using three slots machine is much bigger than the cost of using two slots machine. The program would prefer running on a two slots machine.
+
+
+
+
+
+
+
+
+
+
+
+
